@@ -175,14 +175,17 @@ inline std::string_view GetName() {
   return fb2::detail::FiberActive()->name();
 }
 
+inline uint32_t GetSafetyMargin() {
+  return fb2::detail::FiberActive()->GetStackMargin();
+}
+
 inline void CheckSafetyMargin() {
   fb2::detail::FiberActive()->CheckStackMargin();
 }
 
 class PrintLocalsCallback {
-public:
-  template<typename Fn>
-  PrintLocalsCallback(Fn&& fn) {
+ public:
+  template <typename Fn> PrintLocalsCallback(Fn&& fn) {
     fb2::detail::FiberActive()->SetPrintStacktraceCb(std::forward<Fn>(fn));
   }
 

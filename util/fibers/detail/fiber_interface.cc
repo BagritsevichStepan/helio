@@ -185,16 +185,20 @@ ctx::fiber_context FiberInterface::Terminate() {
   return scheduler_->Preempt();
 }
 
+uint32_t FiberInterface::GetStackMargin() const {
+  const uint8_t* ptr = stack_bottom_;
+  while (*ptr == 0xAB) {
+    ++ptr;
+  }
+  return ptr - stack_bottom_;
+}
+
 void FiberInterface::CheckStackMargin() {
   uint32_t check_margin = absl::GetFlag(FLAGS_fiber_safety_margin);
   if (check_margin == 0)
     return;
 
-  const uint8_t* ptr = stack_bottom_;
-  while (*ptr == 0xAB) {
-    ++ptr;
-  }
-  uint32_t margin = ptr - stack_bottom_;
+  const uint32_t margin = GetStackMargin();
 
   CHECK_GE(margin, check_margin) << "Low stack margin for " << name_;
 
