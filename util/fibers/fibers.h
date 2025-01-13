@@ -175,7 +175,9 @@ inline std::string_view GetName() {
   return fb2::detail::FiberActive()->name();
 }
 
-inline uint32_t GetSafetyMargin() {
+// Returns the active fiber stack margin.
+// Use this to determine how much free space is available in the fiber stack.
+inline uint32_t GetStackMargin() {
   return fb2::detail::FiberActive()->GetStackMargin();
 }
 
